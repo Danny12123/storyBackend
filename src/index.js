@@ -17,7 +17,7 @@ const suerRouter = require('./route/Suers')
 const sauthRouter = require('./route/Sauth')
 const profileRouter = require('./route/profile')
 const cors = require('cors');
-
+const serverless = require("serverless-http");
 
 
 dotenv.config();
@@ -43,7 +43,7 @@ const client = new Coinbase.Client({
   apiKey: " lwIKjIbVriqmzA0e",
   apiSecret: "W72XH9KHvDnWHZW1vEaPS8NuwODTBsOa",
 });
-app.post("/api/payments", (req, res) => {
+app.post("/.netlify/functions/api/payments", (req, res) => {
   // const { amount, walletAddress } = req.body;
  
   // initiate a cryptocurrency payment using Coinbase API
@@ -113,7 +113,7 @@ mongoose
   });
 
   const upload = multer({ storage })
-  app.post("/api/upload", upload.array("files"), (req, res) => {
+  app.post("/.netlify/functions/api/upload", upload.array("files"), (req, res) => {
     try {
       return res.status(200).json("File has been uploaded");
     } catch (error) {
@@ -122,7 +122,7 @@ mongoose
   });
 
   const uploadMut = multer({ storage });
-  app.post("/api/profilepic", uploadMut.single("file"), (req, res) => {
+  app.post("/.netlify/functions/api/profilepic", uploadMut.single("file"), (req, res) => {
     try {
       return res.status(200).json("File has been uploaded");
     } catch (error) {
@@ -131,7 +131,7 @@ mongoose
   });
 
   // Define a route to retrieve all items in the collection
-  app.get('/api/items', async (req, res) => {
+  app.get('/.netlify/functions/api/items', async (req, res) => {
     try {
       const collection = db('storymain').collection('post');
       const items = await collection.find().toArray();
@@ -142,16 +142,16 @@ mongoose
     }
   });
 
-  app.use("/api/users", userRoute);
-  app.use("/api/auth", authRoute);
-  app.use("/api/post", PostRoute);
-  app.use("/api/conversation", Conversation);
-  app.use("/api/message", MessageRoute);
-  app.use("/api/comment", Comment);
-  app.use("/api/susers", suerRouter);
-  app.use("/api/sauth", sauthRouter);
-  app.use("/api/profile", profileRouter);
+  app.use("/.netlify/functions/api/users", userRoute);
+  app.use("/.netlify/functions/api/auth", authRoute);
+  app.use("/.netlify/functions/api/post", PostRoute);
+  app.use("/.netlify/functions/api/conversation", Conversation);
+  app.use("/.netlify/functions/api/message", MessageRoute);
+  app.use("/.netlify/functions/api/comment", Comment);
+  app.use("/.netlify/functions/api/susers", suerRouter);
+  app.use("/.netlify/functions/api/sauth", sauthRouter);
+  app.use("/.netlify/functions/api/profile", profileRouter);
 
-
+module.exports.handler = serverless(app);
 
 app.listen(7878,()=> console.log("Backend is running!"))
